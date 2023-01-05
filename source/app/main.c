@@ -30,6 +30,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include "main.h"
 
 /******************************************************************************/
@@ -59,7 +60,12 @@ static u32_t dwFileToString(u8_p byStr);
 /******************************************************************************/
 int main(void_t)
 {
+    u8_t byNum = 0;
+
     dwFileToString(byFileStr);
+    byNum = soBanTinGuiDi(byFileStr, strlen(byFileStr));
+    printf("\nSo ban tin duoc gui di la: %d", byNum);
+    
     return 0;
 }
 
