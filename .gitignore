@@ -3,3 +3,5 @@ Makefile.win
 Assignment2.layout
 Assignment2.exe
 main.o
+log.txt
+/.vscode
