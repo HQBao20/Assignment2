@@ -1,13 +1,13 @@
 /*******************************************************************************
  *				 _ _                                             _ _
-				|   |                                           (_ _)
-				|   |        _ _     _ _   _ _ _ _ _ _ _ _ _ _   _ _
-				|   |       |   |   |   | |    _ _     _ _    | |   |
-				|   |       |   |   |   | |   |   |   |   |   | |   |
-				|   |       |   |   |   | |   |   |   |   |   | |   |
-				|   |_ _ _  |   |_ _|   | |   |   |   |   |   | |   |
-				|_ _ _ _ _| |_ _ _ _ _ _| |_ _|   |_ _|   |_ _| |_ _|
-								(C)2021 Lumi
+                |   |                                           (_ _)
+                |   |        _ _     _ _   _ _ _ _ _ _ _ _ _ _   _ _
+                |   |       |   |   |   | |    _ _     _ _    | |   |
+                |   |       |   |   |   | |   |   |   |   |   | |   |
+                |   |       |   |   |   | |   |   |   |   |   | |   |
+                |   |_ _ _  |   |_ _|   | |   |   |   |   |   | |   |
+                |_ _ _ _ _| |_ _ _ _ _ _| |_ _|   |_ _|   |_ _| |_ _|
+                                (C)2021 Lumi
  * Copyright (c) 2023
  * Lumi, JSC.
  * All Rights Reserved
@@ -30,15 +30,18 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "D:\Lumi_IOT\Assignment2\source\app\main.h"
+#include "main.h"
 
 /******************************************************************************/
 /*                     EXPORTED TYPES and DEFINITIONS                         */
 /******************************************************************************/
+#define FILENAME "log.txt"
+#define MAXLENGTHFILE 5000
 
 /******************************************************************************/
 /*                              PRIVATE DATA                                  */
 /******************************************************************************/
+static u8_t byFileStr[MAXLENGTHFILE];
 
 /******************************************************************************/
 /*                              EXPORTED DATA                                 */
@@ -47,6 +50,7 @@
 /******************************************************************************/
 /*                            PRIVATE FUNCTIONS                               */
 /******************************************************************************/
+static u32_t dwFileToString(u8_p byStr);
 
 /******************************************************************************/
 /*                            EXPORTED FUNCTIONS                              */
@@ -55,6 +59,35 @@
 /******************************************************************************/
 int main(void_t)
 {
+    dwFileToString(byFileStr);
     return 0;
+}
+
+/**
+ * @func dwFileToString
+ * @brief Convert file to string
+ * 
+ * @param [byStr] : 
+ * @return u32_t 
+ */
+static u32_t dwFileToString(u8_p byStr)
+{
+    u32_t dwStatus;
+    FILE *fp = NULL;
+
+    fp = fopen(FILENAME, "r");
+    if(fp == NULL)
+    {
+        printf("File does not exit\n");
+        return -1;
+    }
+    dwStatus = fread(byStr, MAXLENGTHFILE, 1, fp);
+
+    printf("Noi dung cua file log.txt: \n%s", byStr);
+
+    fclose(fp);
+    fp = NULL;
+
+    return dwStatus;
 }
 
