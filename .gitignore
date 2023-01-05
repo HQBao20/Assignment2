@@ -3,5 +3,6 @@ Makefile.win
 Assignment2.layout
 Assignment2.exe
 main.o
+ban-tin.o
 log.txt
 /.vscode
