@@ -30,6 +30,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
 #include "ban-tin.h"
 
 /******************************************************************************/
@@ -47,6 +48,7 @@
 /******************************************************************************/
 /*                            PRIVATE FUNCTIONS                               */
 /******************************************************************************/
+static void_t bufClr(u8_t *buf);
 
 /******************************************************************************/
 /*                            EXPORTED FUNCTIONS                              */
@@ -86,7 +88,7 @@ u8_t soBanTinGuiDi(u8_p pbyStr, u32_t dwNumOfStr)
 
 u8_t soBanTinGuiTuThietBi(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffer[])
 {
-    u8_t i = 0;
+    u32_t i = 0;
     u8_t j = 0;
     u8_t byStrRaw[4];
     u8_t byCount = 0;
@@ -94,7 +96,7 @@ u8_t soBanTinGuiTuThietBi(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffer[])
     // u8_t byStrRequid1[4];
     // u8_t byStrRequid2[4];
 
-    for(i = 176; i < dwNumOfStr; i++)
+    for(i = 153; i < dwNumOfStr; i++)
     {
         // if(*(pbyStr + i) == '\0')
         // {
@@ -115,6 +117,7 @@ u8_t soBanTinGuiTuThietBi(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffer[])
         }
         if(strcmp(byBuffer,byStrRaw) == 0)
         {
+            bufClr(&byStrRaw[0]);
             byCount++;
         }
         // if(*(pbyStr + i) == 'r')
@@ -145,5 +148,22 @@ u8_t soBanTinGuiTuThietBi(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffer[])
         // }
     }
 
-    return byCount;
+    return (byCount / 2);
+}
+
+/**
+ * @brief Clear buffer
+ * 
+ * @param [byBuf] : Buffer needs to be cleared 
+ * @return value : None 
+ */
+static void_t bufClr(u8_p byBuf)
+{
+    u8_t byLength = strlen(byBuf);
+    u8_t i = 0;
+
+    for (i = 0; i < byLength; i++)
+    {
+        *(byBuf + i) = 0;
+    }
 }

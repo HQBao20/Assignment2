@@ -60,11 +60,17 @@ static u32_t dwFileToString(u8_p byStr);
 /******************************************************************************/
 int main(void_t)
 {
-    u8_t byNum = 0;
+    u8_t byNumBanTinGuiDi = 0;
+    u8_t byNumBanTinGuiDiThietBi = 0;
+    u8_t byBuffer[4];
 
     dwFileToString(byFileStr);
-    byNum = soBanTinGuiDi(byFileStr, strlen(byFileStr));
-    printf("\nSo ban tin duoc gui di la: %d", byNum);
+    byNumBanTinGuiDi = soBanTinGuiDi(byFileStr, strlen(byFileStr));
+    printf("\nSo ban tin duoc gui di la: %d", byNumBanTinGuiDi);
+    printf("\nNhap networking: ");
+    gets(byBuffer);
+    byNumBanTinGuiDiThietBi = soBanTinGuiTuThietBi(byFileStr, strlen(byFileStr), byBuffer);
+    printf("\nSo ban tin duoc gui di tu thiet bi: %d", byNumBanTinGuiDiThietBi);
     
     return 0;
 }
