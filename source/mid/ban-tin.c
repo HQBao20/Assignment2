@@ -39,6 +39,13 @@
 #define TYPE_DEVICE "switch"
 #define STATUS "set"
 #define CMD "cmd"
+#define RAW "raw"
+#define CODE_LOG "requid"
+#define LENGTH_NWT_ENDPOINT 8
+#define START_POINT_SET 38
+#define START_POINT_NWT 48
+#define START_POINT_RAW 153
+#define LENGTH_NWT_RAW 6
 
 /******************************************************************************/
 /*                              PRIVATE DATA                                  */
@@ -51,7 +58,7 @@
 /******************************************************************************/
 /*                            PRIVATE FUNCTIONS                               */
 /******************************************************************************/
-static bool_t checkBuff(u8_p pbyStr, u8_p pbyBuff, u8_t point);
+static bool_t compareText(u8_p pbyStr, u8_p pbyBuff, u32_t point);
 static void_t bufClr(u8_p buf);
 static bool_t compareBuffer(u8_t byBuff1[], u8_t byBuff2[], u8_t bySize);
 static void_t copyBuffer(u8_t byBuff1[], u8_t byBuff2[], u8_t bySize);
@@ -65,27 +72,15 @@ u8_t soBanTinGuiDi(u8_p pbyStr, u32_t dwNumOfStr)
 {
     u32_t i = 0;
     u8_t byCount = 0;
+    u8_p pbyCompareStr = STATUS;
+    bool_t boCheckStatus = false;
 
-    for(i = 32; i < dwNumOfStr; i++)
+    for(i = START_POINT_SET; i < dwNumOfStr; i++)
     {
-        if(*(pbyStr + i) == 'c')
+        boCheckStatus = compareText(pbyStr, pbyCompareStr, i);
+        if(boCheckStatus)
         {
-            if(*(pbyStr + i + 1) == 'm')
-            {
-                if(*(pbyStr + i + 2) == 'd')
-                {
-                    if(*(pbyStr + i + 6) == 's')
-                    {
-                        if(*(pbyStr + i + 7) == 'e')
-                        {
-                            if(*(pbyStr + i + 8) == 't')
-                            {
-                                byCount++;
-                            }
-                        }
-                    }
-                }
-            }
+            byCount++;
         }
     }
 
@@ -96,27 +91,34 @@ u8_t soBanTinGuiTuThietBi(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffer[])
 {
     u32_t i = 0;
     u8_t j = 0;
+    u8_p pbyCompareStr = RAW;
+    bool_t boCheckStatus = false;
+    bool_t boCheckNWT = false;
     u8_t byStrRaw[4];
     u8_t byCount = 0;
 
-    for(i = 153; i < dwNumOfStr; i++)
+    for(i = START_POINT_RAW; i < dwNumOfStr; i++)
     {
-        if(*(pbyStr + i) == 'r')
+        boCheckStatus = compareText(pbyStr, pbyCompareStr, i);
+        if(boCheckStatus)
         {
-            if(*(pbyStr + i + 1) == 'a')
-            {
-                if(*(pbyStr + i + 2) == 'w')
-                {
-                    for(j = 0; j < 4; j++)
-                    {
-                        byStrRaw[j] = *(pbyStr + j + i + 6);
-                    }
-                }
-            }
+            boCheckNWT = compareText(pbyStr, &byBuffer[0], (i + LENGTH_NWT_RAW));
         }
-        if(strcmp(byBuffer,byStrRaw) == 0)
+        // if(*(pbyStr + i) == 'r')
+        // {
+        //     if(*(pbyStr + i + 1) == 'a')
+        //     {
+        //         if(*(pbyStr + i + 2) == 'w')
+        //         {
+        //             for(j = 0; j < 4; j++)
+        //             {
+        //                 byStrRaw[j] = *(pbyStr + j + i + 6);
+        //             }
+        //         }
+        //     }
+        // }
+        if(boCheckNWT)
         {
-            bufClr(&byStrRaw[0]);
             byCount++;
         }
     }
@@ -128,65 +130,55 @@ u8_t soCongTac(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffToken1[], u8_t byBuffTo
 {
    u32_t i = 0;
    u8_t j = 0;
-   u8_t k = 0;
    u8_t byCount = 0;
    u8_t byCountSwitch = 1;
+   u8_t byBufferNetwEndpoint1[LENGTH_NWT_ENDPOINT];
+   u8_t byBufferNetwEndpoint2[LENGTH_NWT_ENDPOINT];
+   u8_t byBufferNetwEndpointTemp[LENGTH_NWT_ENDPOINT] = {0};
+   u8_p pbyCompareStr = STATUS;
    bool_t boCheckEnd = false;
-   bool_t boCheckDevice = false;
-   u8_t byBufferNetwEndpoint1[8];
-   u8_t byBufferNetwEndpoint2[8];
-   u8_t byBufferNetwEndpointTemp[8] = {0};
-   u8_p pbyBuffDevice = STATUS;
+   bool_t boCompare = false;
 
-   for(i = 38; i < dwNumOfStr; i++)
+   for(i = START_POINT_SET; i < dwNumOfStr; i++)
    {
-       if(*(pbyStr + i) == '\n')
-       {
-           boCheckEnd = true;
-           byCount++;
-       }
-       //boCheckDevice = checkBuff(pbyStr, pbyBuffDevice, i);
-       for(j = 0; j < strlen(pbyBuffDevice); j++)
-       {
-           if(*(pbyStr + i + j) != *(pbyBuffDevice + j))
-           {
-               boCheckDevice = false;
-               break;
-           }
-           else
-           {
-               boCheckDevice = true;
-           }
-       }
-       if(boCheckDevice)
-       {
-           for(k = 0; k < 8; k++)
-           {
-               if(!boCheckEnd)
-               {
-                   byBufferNetwEndpoint1[k] = *(pbyStr + i + k + 48);
-               }
-               else
-               {
-                   byBufferNetwEndpoint2[k] = *(pbyStr + i + k + 48);
-               }
-           }
-           if(compareBuffer(&byBufferNetwEndpoint1[0], &byBufferNetwEndpoint2[0], 8) == true || byCount == 0)
-           {
-               bufClr(&byBufferNetwEndpoint2[0]);
-           }
-           else if(compareBuffer(&byBufferNetwEndpointTemp[0], &byBufferNetwEndpoint2[0], 8) == false)
-           {
-               byCountSwitch++;
-               copyBuffer(&byBufferNetwEndpointTemp[0], &byBufferNetwEndpoint2[0], 8);
-               bufClr(&byBufferNetwEndpoint2[0]);
-           }
-       }
-   }
-   copyBuffer(byBuffToken1, byBufferNetwEndpoint1, 8);
-   copyBuffer(byBuffToken2, byBufferNetwEndpointTemp, 8);
+        if(*(pbyStr + i) == '\n')
+        {
+            boCheckEnd = true;
+            byCount++;
+        }
+        boCompare = compareText(pbyStr, pbyCompareStr, i);
+        if(boCompare)
+        {
+            for(j = 0; j < LENGTH_NWT_ENDPOINT; j++)
+            {
+                if(!boCheckEnd)
+                {
+                    byBufferNetwEndpoint1[j] = *(pbyStr + i + j + START_POINT_NWT);
+                }
+                else
+                {
+                    byBufferNetwEndpoint2[j] = *(pbyStr + i + j + START_POINT_NWT);
+                }
+            }
+            if(compareBuffer(&byBufferNetwEndpoint1[0], &byBufferNetwEndpoint2[0],
+                LENGTH_NWT_ENDPOINT) == true || byCount == 0)
+            {
+                bufClr(&byBufferNetwEndpoint2[0]);
+            }
+            else if(compareBuffer(&byBufferNetwEndpointTemp[0], &byBufferNetwEndpoint2[0],
+                LENGTH_NWT_ENDPOINT) == false)
+            {
+                byCountSwitch++;
+                copyBuffer(&byBufferNetwEndpointTemp[0], &byBufferNetwEndpoint2[0],
+                    LENGTH_NWT_ENDPOINT);
+                bufClr(&byBufferNetwEndpoint2[0]);
+            }
+        }
+    }
+    copyBuffer(byBuffToken1, byBufferNetwEndpoint1, LENGTH_NWT_ENDPOINT);
+    copyBuffer(byBuffToken2, byBufferNetwEndpointTemp, LENGTH_NWT_ENDPOINT);
 
-   return byCountSwitch;
+    return byCountSwitch;
 }
 
 /**
@@ -223,7 +215,7 @@ static bool_t compareBuffer(u8_p pbyBuff1, u8_p pbyBuff2, u8_t bySize)
     for(i = 0; i < bySize; i++)
     {
         if(*(pbyBuff1 + i) != *(pbyBuff2 + i))
-        {	//WTF?
+        {
             boCompare = false;
             break;
         }
@@ -250,28 +242,31 @@ static void_t copyBuffer(u8_p pbyBuff1, u8_p pbyBuff2, u8_t bySize)
 }
 
 /**
- * @brief Check text
+ * @func compareText
+ * @brief Compare string
  * 
- * @param [pbyStr] : String to check
+ * @param pbyStr 
+ * @param pbyBuff 
+ * @param point 
  * @return bool_t 
  */
-// static bool_t checkBuff(u8_p pbyStr, u8_p pbyBuff, u8_t point)
-// {
-//     u8_t i = 0;
-//     bool_t boCheckText = false;
+static bool_t compareText(u8_p pbyStr, u8_p pbyBuff, u32_t point)
+{
+    u8_t i = 0;
+    bool_t boCheckString = false;
 
-//     for(i = 0; i < strlen(pbyBuff); i++)
-//     {
-//         if(*(pbyStr + point + i) != *(pbyBuff + i))
-//         {
-//             boCheckText = false;
-//             break;
-//         }
-//         else
-//         {
-//             boCheckText = true;
-//         }
-//     }
+    for(i = 0; i < strlen(pbyBuff); i++)
+    {
+        if(*(pbyStr + point + i) != *(pbyBuff + i))
+        {
+            boCheckString = false;
+            break;
+        }
+        else
+        {
+            boCheckString = true;
+        }
+    }
 
-//     return boCheckText;
-// }
+    return boCheckString;
+}

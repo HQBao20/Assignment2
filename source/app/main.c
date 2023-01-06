@@ -75,10 +75,10 @@ int main(void_t)
     gets(byBuffer);
     byNumBanTinGuiDiThietBi = soBanTinGuiTuThietBi(byFileStr, strlen(byFileStr), byBuffer);
     printf("\nSo ban tin duoc gui di tu thiet bi: %d", byNumBanTinGuiDiThietBi);
-    byNumSwitch = soCongTac(byFileStr, strlen(byFileStr), &byBuffTok1[0], &byBuffTok2[0]);
-    printf("\nSo cong tac la: %d", byNumSwitch);
-    printNetwEndpoint(&byBuffTok1[0]);
-    printNetwEndpoint(&byBuffTok2[0]);
+//    byNumSwitch = soCongTac(byFileStr, strlen(byFileStr), &byBuffTok1[0], &byBuffTok2[0]);
+//    printf("\nSo cong tac la: %d", byNumSwitch);
+//    printNetwEndpoint(&byBuffTok1[0]);
+//    printNetwEndpoint(&byBuffTok2[0]);
 
     return 0;
 }
