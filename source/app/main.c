@@ -51,7 +51,8 @@ static u8_t byFileStr[MAXLENGTHFILE];
 /******************************************************************************/
 /*                            PRIVATE FUNCTIONS                               */
 /******************************************************************************/
-static u32_t dwFileToString(u8_p byStr);
+static u32_t dwFileToString(u8_p pbyStr);
+static void_t printNetwEndpoint(u8_p pbyBuff);
 
 /******************************************************************************/
 /*                            EXPORTED FUNCTIONS                              */
@@ -62,7 +63,10 @@ int main(void_t)
 {
     u8_t byNumBanTinGuiDi = 0;
     u8_t byNumBanTinGuiDiThietBi = 0;
+    u8_t byNumSwitch = 0;
     u8_t byBuffer[4];
+    u8_t byBuffTok1[8];
+    u8_t byBuffTok2[8];
 
     dwFileToString(byFileStr);
     byNumBanTinGuiDi = soBanTinGuiDi(byFileStr, strlen(byFileStr));
@@ -71,7 +75,11 @@ int main(void_t)
     gets(byBuffer);
     byNumBanTinGuiDiThietBi = soBanTinGuiTuThietBi(byFileStr, strlen(byFileStr), byBuffer);
     printf("\nSo ban tin duoc gui di tu thiet bi: %d", byNumBanTinGuiDiThietBi);
-    
+    byNumSwitch = soCongTac(byFileStr, strlen(byFileStr), &byBuffTok1[0], &byBuffTok2[0]);
+    printf("\nSo cong tac la: %d", byNumSwitch);
+    printNetwEndpoint(&byBuffTok1[0]);
+    printNetwEndpoint(&byBuffTok2[0]);
+
     return 0;
 }
 
@@ -82,7 +90,7 @@ int main(void_t)
  * @param [byStr] : 
  * @return u32_t 
  */
-static u32_t dwFileToString(u8_p byStr)
+static u32_t dwFileToString(u8_p pbyStr)
 {
     u32_t dwStatus;
     FILE *fp = NULL;
@@ -93,9 +101,9 @@ static u32_t dwFileToString(u8_p byStr)
         printf("File does not exit\n");
         return -1;
     }
-    dwStatus = fread(byStr, MAXLENGTHFILE, 1, fp);
+    dwStatus = fread(pbyStr, MAXLENGTHFILE, 1, fp);
 
-    printf("Noi dung cua file log.txt: \n%s", byStr);
+    printf("Noi dung cua file log.txt: \n%s", pbyStr);
 
     fclose(fp);
     fp = NULL;
@@ -103,3 +111,11 @@ static u32_t dwFileToString(u8_p byStr)
     return dwStatus;
 }
 
+static void_t printNetwEndpoint(u8_p pbyBuff)
+{
+    u8_p byToken = strtok(pbyBuff, "-");
+
+    printf("\nNWK - %s, ", byToken);
+    byToken = strtok(NULL, "-");
+    printf("ENDPOINT - %s", byToken);
+}

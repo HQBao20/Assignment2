@@ -66,8 +66,18 @@ u8_t soBanTinGuiDi(u8_p pbyStr, u32_t dwNumOfStr);
  * @brief Print out the log that was sent
  * 
  * @param [pbyStr] : String to parse
- * @param [dwNumOfStr] : Number of element of the Buffer 
+ * @param [dwNumOfStr] : Number of element of the Buffer
  * @return value : None
  */
 u8_t soBanTinGuiTuThietBi(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffer[]);
+
+/**
+ * @brief 
+ * 
+ * @param [pbyStr] : String to parse
+ * @param [dwNumOfStr] : Number of element of the Buffer
+ * @return u8_t 
+ */
+u8_t soCongTac(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffToken1[], u8_t byBuffToken2[]);
+
 #endif /* BAN_TIN_H_ */ 
