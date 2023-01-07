@@ -80,4 +80,14 @@ u8_t soBanTinGuiTuThietBi(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffer[]);
  */
 u8_t soCongTac(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffToken1[], u8_t byBuffToken2[]);
 
+/**
+ * @func soBanTinGuiLoi
+ * @brief Calculate the number of log not sent
+ * 
+ * @param [pbyStr] : String to parse 
+ * @param [dwNumOfStr] : Number of element of the Buffer 
+ * @return u8_t 
+ */
+u8_t soBanTinGuiLoi(u8_p pbyStr, u32_t dwNumOfStr);
+
 #endif /* BAN_TIN_H_ */ 

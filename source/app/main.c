@@ -79,6 +79,7 @@ int main(void_t)
     printf("\nSo cong tac la: %d", byNumSwitch);
     printNetwEndpoint(&byBuffTok1[0]);
     printNetwEndpoint(&byBuffTok2[0]);
+    printf("\nSo ban tin gui loi la: %d", soBanTinGuiLoi(byFileStr,strlen(byFileStr)));
 
     return 0;
 }

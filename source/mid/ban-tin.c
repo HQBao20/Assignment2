@@ -37,15 +37,20 @@
 /*                     EXPORTED TYPES and DEFINITIONS                         */
 /******************************************************************************/
 #define TYPE_DEVICE "switch"
-#define STATUS "set"
+#define SET "set"
+#define STATUS "status"
 #define CMD "cmd"
 #define RAW "raw"
-#define CODE_LOG "requid"
+#define REQUID "reqid"
 #define LENGTH_NWT_ENDPOINT 8
 #define START_POINT_SET 38
 #define START_POINT_NWT 48
-#define START_POINT_RAW 14
+#define START_POINT_RAW 153
 #define LENGTH_NWT_RAW 6
+#define LENGTH_SET_REQUID 138
+#define LENGTH_STATUS_REQUID 152
+#define LENGTH_REQUID_CODELOG 9
+#define LENGTH_CODELOG 4
 
 /******************************************************************************/
 /*                              PRIVATE DATA                                  */
@@ -59,9 +64,12 @@
 /*                            PRIVATE FUNCTIONS                               */
 /******************************************************************************/
 static bool_t compareText(u8_p pbyStr, u8_p pbyBuff, u32_t point);
+static bool_t compareMultiText(u8_p pbyStr, u8_p pbyBuff1, u8_p pbyBuff2, 
+    u32_t point);
 static void_t bufClr(u8_p buf);
-static bool_t compareBuffer(u8_t byBuff1[], u8_t byBuff2[], u8_t bySize);
-static void_t copyBuffer(u8_t byBuff1[], u8_t byBuff2[], u8_t bySize);
+static bool_t compareBuffer(u8_p pbyBuff1, u8_p pbyBuff2, u8_t bySize);
+static void_t copyBuffer(u8_p pbyBuff1, u8_p pbyBuff2, u8_t bySize);
+static void_t copyString(u8_p byBuff1, u8_p byBuff2, u32_t point, u8_t bySize);
 
 /******************************************************************************/
 /*                            EXPORTED FUNCTIONS                              */
@@ -72,7 +80,7 @@ u8_t soBanTinGuiDi(u8_p pbyStr, u32_t dwNumOfStr)
 {
     u32_t i = 0;
     u8_t byCount = 0;
-    u8_p pbyCompareStr = STATUS;
+    u8_p pbyCompareStr = SET;
     bool_t boCheckStatus = false;
 
     for(i = START_POINT_SET; i < dwNumOfStr; i++)
@@ -121,7 +129,7 @@ u8_t soCongTac(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffToken1[], u8_t byBuffTo
    u8_t byBufferNetwEndpoint1[LENGTH_NWT_ENDPOINT];
    u8_t byBufferNetwEndpoint2[LENGTH_NWT_ENDPOINT];
    u8_t byBufferNetwEndpointTemp[LENGTH_NWT_ENDPOINT] = {0};
-   u8_p pbyCompareStr = STATUS;
+   u8_p pbyCompareStr = SET;
    bool_t boCheckEnd = false;
    bool_t boCompare = false;
 
@@ -165,6 +173,61 @@ u8_t soCongTac(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffToken1[], u8_t byBuffTo
     copyBuffer(byBuffToken2, byBufferNetwEndpointTemp, LENGTH_NWT_ENDPOINT);
 
     return byCountSwitch;
+}
+
+u8_t soBanTinGuiLoi(u8_p pbyStr, u32_t dwNumOfStr)
+{
+    u32_t i = 0;
+    u8_t j = 0;
+    u8_t byCount = 0;
+    u8_p pbyCompareSet = SET;
+    u8_p pbyCompareStatus = STATUS;
+    u8_p pbyCompareRequid = REQUID;
+    u8_t pbyBufferSet[LENGTH_CODELOG] = {0};
+    u8_t pbyBufferStatus[LENGTH_CODELOG] = {0};
+    bool_t boCheckSetStatus = false;
+    bool_t boCheckRequid = false;
+    bool_t boCheckStatus = false;
+
+    for(i = START_POINT_SET; i < dwNumOfStr; i++)
+    {
+        boCheckSetStatus = compareMultiText(pbyStr, pbyCompareSet,
+            pbyCompareStatus, i);
+        if(boCheckSetStatus)
+        {
+            boCheckRequid = compareText(pbyStr, pbyCompareRequid,
+                (i + LENGTH_SET_REQUID));
+            if(boCheckRequid)
+            {
+                copyString(&pbyBufferSet[0], pbyStr, (i + LENGTH_SET_REQUID +
+                    LENGTH_REQUID_CODELOG), LENGTH_CODELOG);
+            }
+        }
+        else
+        {
+            boCheckRequid = compareText(pbyStr, pbyCompareRequid,
+                (i + LENGTH_STATUS_REQUID));
+            if(boCheckRequid)
+            {
+                boCheckStatus = true;
+                copyString(&pbyBufferStatus[0], pbyStr, (i + LENGTH_STATUS_REQUID +
+                    LENGTH_REQUID_CODELOG), LENGTH_CODELOG);
+            }
+        }
+
+        if(boCheckStatus)
+        {
+            boCheckStatus = false;
+            if(compareBuffer(pbyBufferSet, pbyBufferStatus, LENGTH_CODELOG) == false)
+            {
+                byCount++;
+                bufClr(pbyBufferSet);
+                bufClr(pbyBufferStatus);
+            }
+        }
+    }
+
+    return byCount;
 }
 
 /**
@@ -255,4 +318,48 @@ static bool_t compareText(u8_p pbyStr, u8_p pbyBuff, u32_t point)
     }
 
     return boCheckString;
+}
+
+static bool_t compareMultiText(u8_p pbyStr, u8_p pbyBuff1, u8_p pbyBuff2,
+    u32_t point)
+{
+    u8_t i = 0;
+    bool_t boCheckString = false;
+
+    for(i = 0; i < strlen(pbyBuff1); i++)
+    {
+        if(*(pbyStr + point + i) != *(pbyBuff1 + i))
+        {
+            boCheckString = false;
+            break;
+        }
+        else
+        {
+            boCheckString = true;
+        }
+    }
+    for(i = 0; i < strlen(pbyBuff2); i++)
+    {
+        if(*(pbyStr + point + i) != *(pbyBuff2 + i))
+        {
+            boCheckString = true;
+            break;
+        }
+        else
+        {
+            boCheckString = false;
+        }
+    }
+
+    return boCheckString;
+}
+
+static void_t copyString(u8_p byBuff1, u8_p byBuff2, u32_t point, u8_t bySize)
+{
+    uint8_t i = 0;
+
+    for(i = 0; i < bySize; i++)
+    {
+        *(byBuff1 + i) = *(byBuff2 + i + point);
+    }
 }
