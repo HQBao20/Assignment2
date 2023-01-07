@@ -44,7 +44,7 @@
 #define LENGTH_NWT_ENDPOINT 8
 #define START_POINT_SET 38
 #define START_POINT_NWT 48
-#define START_POINT_RAW 153
+#define START_POINT_RAW 14
 #define LENGTH_NWT_RAW 6
 
 /******************************************************************************/
@@ -90,11 +90,9 @@ u8_t soBanTinGuiDi(u8_p pbyStr, u32_t dwNumOfStr)
 u8_t soBanTinGuiTuThietBi(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffer[])
 {
     u32_t i = 0;
-    u8_t j = 0;
     u8_p pbyCompareStr = RAW;
     bool_t boCheckStatus = false;
     bool_t boCheckNWT = false;
-    u8_t byStrRaw[4];
     u8_t byCount = 0;
 
     for(i = START_POINT_RAW; i < dwNumOfStr; i++)
@@ -104,21 +102,9 @@ u8_t soBanTinGuiTuThietBi(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffer[])
         {
             boCheckNWT = compareText(pbyStr, &byBuffer[0], (i + LENGTH_NWT_RAW));
         }
-        // if(*(pbyStr + i) == 'r')
-        // {
-        //     if(*(pbyStr + i + 1) == 'a')
-        //     {
-        //         if(*(pbyStr + i + 2) == 'w')
-        //         {
-        //             for(j = 0; j < 4; j++)
-        //             {
-        //                 byStrRaw[j] = *(pbyStr + j + i + 6);
-        //             }
-        //         }
-        //     }
-        // }
         if(boCheckNWT)
         {
+        	boCheckNWT = false;
             byCount++;
         }
     }
