@@ -90,4 +90,24 @@ u8_t soCongTac(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffToken1[], u8_t byBuffTo
  */
 u8_t soBanTinGuiLoi(u8_p pbyStr, u32_t dwNumOfStr);
 
+/**
+ * @func thoiGianTreLonNhat
+ * @brief Calculate the max delay time
+ * 
+ * @param pbyStr 
+ * @param dwNumOfStr 
+ * @return float_t 
+ */
+u32_t thoiGianTreLonNhat(u8_p pbyStr, u32_t dwNumOfStr);
+
+/**
+ * @func thoiGianTreTrungBinh
+ * @brief Calculate the average time
+ * 
+ * @param pbyStr 
+ * @param dwNumOfStr 
+ * @return u32_t 
+ */
+u32_t thoiGianTreTrungBinh(u8_p pbyStr, u32_t dwNumOfStr);
+
 #endif /* BAN_TIN_H_ */ 

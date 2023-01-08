@@ -64,6 +64,9 @@ int main(void_t)
     u8_t byNumBanTinGuiDi = 0;
     u8_t byNumBanTinGuiDiThietBi = 0;
     u8_t byNumSwitch = 0;
+    u8_t byNumBanTinGuiLoi = 0;
+    u32_t dwNumThoiGianTreLonNhat = 0;
+    u32_t dwNumThoiGianTreTrungBinh = 0;
     u8_t byBuffer[4];
     u8_t byBuffTok1[8];
     u8_t byBuffTok2[8];
@@ -79,7 +82,12 @@ int main(void_t)
     printf("\nSo cong tac la: %d", byNumSwitch);
     printNetwEndpoint(&byBuffTok1[0]);
     printNetwEndpoint(&byBuffTok2[0]);
-    printf("\nSo ban tin gui loi la: %d", soBanTinGuiLoi(byFileStr,strlen(byFileStr)));
+    byNumBanTinGuiLoi = soBanTinGuiLoi(byFileStr,strlen(byFileStr));
+    printf("\nSo ban tin gui loi la: %d", byNumBanTinGuiLoi);
+    dwNumThoiGianTreLonNhat = thoiGianTreLonNhat(byFileStr, strlen(byFileStr));
+    printf("\nDo tre lon nhat la: %d", dwNumThoiGianTreLonNhat);
+    dwNumThoiGianTreTrungBinh = thoiGianTreTrungBinh(byFileStr, strlen(byFileStr));
+    printf("\nDo tre trung binh la: %d", dwNumThoiGianTreTrungBinh);
 
     return 0;
 }
