@@ -20,7 +20,7 @@
  *
  * Last Changed By:  $Author: baohq $
  * Revision:         $Revision: $
- * Last Changed:     $Date: $Jan 3, 2023
+ * Last Changed:     $Date: $Jan 4, 2023
  *
  * Code sample:
  ******************************************************************************/
@@ -58,11 +58,12 @@
  * @brief Calculate the number of log sent
  * 
  * @param [pbyStr] : String to parse
- * @return u8_t 
+ * @return u8_t
  */
 u8_t soBanTinGuiDi(u8_p pbyStr, u32_t dwNumOfStr);
 
 /**
+ * @func soBanTinGuiTuThietBi
  * @brief Print out the log that was sent
  * 
  * @param [pbyStr] : String to parse
@@ -72,7 +73,8 @@ u8_t soBanTinGuiDi(u8_p pbyStr, u32_t dwNumOfStr);
 u8_t soBanTinGuiTuThietBi(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffer[]);
 
 /**
- * @brief 
+ * @func soCongTac
+ * @brief Count switch
  * 
  * @param [pbyStr] : String to parse
  * @param [dwNumOfStr] : Number of element of the Buffer
@@ -84,8 +86,8 @@ u8_t soCongTac(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffToken1[], u8_t byBuffTo
  * @func soBanTinGuiLoi
  * @brief Calculate the number of log not sent
  * 
- * @param [pbyStr] : String to parse 
- * @param [dwNumOfStr] : Number of element of the Buffer 
+ * @param [pbyStr] : String to parse
+ * @param [dwNumOfStr] : Number of element of the Buffer
  * @return u8_t 
  */
 u8_t soBanTinGuiLoi(u8_p pbyStr, u32_t dwNumOfStr);
@@ -94,9 +96,9 @@ u8_t soBanTinGuiLoi(u8_p pbyStr, u32_t dwNumOfStr);
  * @func thoiGianTreLonNhat
  * @brief Calculate the max delay time
  * 
- * @param pbyStr 
- * @param dwNumOfStr 
- * @return float_t 
+ * @param [pbyStr] : String to parse
+ * @param [dwNumOfStr] : Number of element of the Buffer
+ * @return float_t
  */
 u32_t thoiGianTreLonNhat(u8_p pbyStr, u32_t dwNumOfStr);
 
@@ -104,8 +106,8 @@ u32_t thoiGianTreLonNhat(u8_p pbyStr, u32_t dwNumOfStr);
  * @func thoiGianTreTrungBinh
  * @brief Calculate the average time
  * 
- * @param pbyStr 
- * @param dwNumOfStr 
+ * @param [pbyStr] : String to parse
+ * @param [dwNumOfStr] : Number of element of the Buffer
  * @return u32_t 
  */
 u32_t thoiGianTreTrungBinh(u8_p pbyStr, u32_t dwNumOfStr);

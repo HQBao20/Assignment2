@@ -71,7 +71,7 @@
 /*                            PRIVATE FUNCTIONS                               */
 /******************************************************************************/
 static bool_t compareText(u8_p pbyStr, u8_p pbyBuff, u32_t point);
-static bool_t compareMultiText(u8_p pbyStr, u8_p pbyBuff1, u8_p pbyBuff2, 
+static bool_t compareMultiText(u8_p pbyStr, u8_p pbyBuff1, u8_p pbyBuff2,
     u32_t point);
 static void_t bufClr(u8_p buf);
 static bool_t compareBuffer(u8_p pbyBuff1, u8_p pbyBuff2, u8_t bySize);
@@ -120,7 +120,7 @@ u8_t soBanTinGuiTuThietBi(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffer[])
         }
         if(boCheckNWT)
         {
-        	boCheckNWT = false;
+            boCheckNWT = false;
             byCount++;
         }
     }
@@ -131,19 +131,19 @@ u8_t soBanTinGuiTuThietBi(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffer[])
 u8_t soCongTac(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffToken1[],
     u8_t byBuffToken2[])
 {
-   u32_t i = 0;
-   u8_t j = 0;
-   u8_t byCount = 0;
-   u8_t byCountSwitch = 1;
-   u8_t byBufferNetwEndpoint1[LENGTH_NWT_ENDPOINT];
-   u8_t byBufferNetwEndpoint2[LENGTH_NWT_ENDPOINT];
-   u8_t byBufferNetwEndpointTemp[LENGTH_NWT_ENDPOINT] = {0};
-   u8_p pbyCompareStr = SET;
-   bool_t boCheckEnd = false;
-   bool_t boCompare = false;
+    u32_t i = 0;
+    u8_t j = 0;
+    u8_t byCount = 0;
+    u8_t byCountSwitch = 1;
+    u8_t byBufferNetwEndpoint1[LENGTH_NWT_ENDPOINT];
+    u8_t byBufferNetwEndpoint2[LENGTH_NWT_ENDPOINT];
+    u8_t byBufferNetwEndpointTemp[LENGTH_NWT_ENDPOINT] = {0};
+    u8_p pbyCompareStr = SET;
+    bool_t boCheckEnd = false;
+    bool_t boCompare = false;
 
-   for(i = START_POINT_SET; i < dwNumOfStr; i++)
-   {
+    for(i = START_POINT_SET; i < dwNumOfStr; i++)
+    {
         if(*(pbyStr + i) == '\n')
         {
             boCheckEnd = true;
@@ -163,16 +163,16 @@ u8_t soCongTac(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffToken1[],
                     byBufferNetwEndpoint2[j] = *(pbyStr + i + j + START_POINT_NWT);
                 }
             }
-            if(compareBuffer(&byBufferNetwEndpoint1[0], &byBufferNetwEndpoint2[0],\
+            if(compareBuffer(&byBufferNetwEndpoint1[0], &byBufferNetwEndpoint2[0],
                 LENGTH_NWT_ENDPOINT) == true || byCount == 0)
             {
                 bufClr(&byBufferNetwEndpoint2[0]);
             }
-            else if(compareBuffer(&byBufferNetwEndpointTemp[0], &byBufferNetwEndpoint2[0],\
+            else if(compareBuffer(&byBufferNetwEndpointTemp[0], &byBufferNetwEndpoint2[0],
                 LENGTH_NWT_ENDPOINT) == false)
             {
                 byCountSwitch++;
-                copyBuffer(&byBufferNetwEndpointTemp[0], &byBufferNetwEndpoint2[0],\
+                copyBuffer(&byBufferNetwEndpointTemp[0], &byBufferNetwEndpoint2[0],
                     LENGTH_NWT_ENDPOINT);
                 bufClr(&byBufferNetwEndpoint2[0]);
             }
@@ -203,22 +203,22 @@ u8_t soBanTinGuiLoi(u8_p pbyStr, u32_t dwNumOfStr)
             pbyCompareStatus, i);
         if(boCheckSetStatus)
         {
-            boCheckRequid = compareText(pbyStr, pbyCompareRequid,\
+            boCheckRequid = compareText(pbyStr, pbyCompareRequid,
                 (i + LENGTH_SET_REQUID));
             if(boCheckRequid)
             {
-                copyString(&pbyBufferSet[0], pbyStr, (i + LENGTH_SET_REQUID +\
+                copyString(&pbyBufferSet[0], pbyStr, (i + LENGTH_SET_REQUID +
                     LENGTH_REQUID_CODELOG), LENGTH_CODELOG);
             }
         }
         else
         {
-            boCheckRequid = compareText(pbyStr, pbyCompareRequid,\
+            boCheckRequid = compareText(pbyStr, pbyCompareRequid,
                 (i + LENGTH_STATUS_REQUID));
             if(boCheckRequid)
             {
                 boCheckStatus = true;
-                copyString(&pbyBufferStatus[0], pbyStr, (i + LENGTH_STATUS_REQUID +\
+                copyString(&pbyBufferStatus[0], pbyStr, (i + LENGTH_STATUS_REQUID +
                     LENGTH_REQUID_CODELOG), LENGTH_CODELOG);
             }
         }
@@ -261,14 +261,14 @@ u32_t thoiGianTreLonNhat(u8_p pbyStr, u32_t dwNumOfStr)
         boCheckStatus = compareText(pbyStr, pbyCompareStatus, i);
         if(boCheckSet)
         {
-            copyString(&byBufferTimeSet[0], pbyStr, (i - LENGTH_TIME_SET),\
+            copyString(&byBufferTimeSet[0], pbyStr, (i - LENGTH_TIME_SET),
                 LENGTH_TIME);
             fSetSecond = convertTimeToSecond(&byBufferTimeSet[0]);
         }
         else if(boCheckStatus)
         {
             boCheck = true;
-            copyString(&byBufferTimeStatus[0], pbyStr, (i - LENGTH_TIME_SET),\
+            copyString(&byBufferTimeStatus[0], pbyStr, (i - LENGTH_TIME_SET),
                 LENGTH_TIME);
             fStatusSecond = convertTimeToSecond(&byBufferTimeStatus[0]);
         }
@@ -297,7 +297,7 @@ u32_t thoiGianTreTrungBinh(u8_p pbyStr, u32_t dwNumOfStr)
     u8_p pbyCompareStatus = STATUS;
     u8_t byBufferTimeSet[LENGTH_TIME] = {0};
     u8_t byBufferTimeStatus[LENGTH_TIME] = {0};
-    float_t byBufferSecond[NUM_OF_DELAY_TIME] = {0};
+    float_t fBufferSecond[NUM_OF_DELAY_TIME] = {0};
     float_t fSetSecond = 0;
     float_t fStatusSecond = 0;
     float_t fDelaySecond = 0;
@@ -313,14 +313,14 @@ u32_t thoiGianTreTrungBinh(u8_p pbyStr, u32_t dwNumOfStr)
         boCheckStatus = compareText(pbyStr, pbyCompareStatus, i);
         if(boCheckSet)
         {
-            copyString(&byBufferTimeSet[0], pbyStr, (i - LENGTH_TIME_SET),\
+            copyString(&byBufferTimeSet[0], pbyStr, (i - LENGTH_TIME_SET),
                 LENGTH_TIME);
             fSetSecond = convertTimeToSecond(&byBufferTimeSet[0]);
         }
         else if(boCheckStatus)
         {
             boCheck = true;
-            copyString(&byBufferTimeStatus[0], pbyStr, (i - LENGTH_TIME_SET),\
+            copyString(&byBufferTimeStatus[0], pbyStr, (i - LENGTH_TIME_SET),
                 LENGTH_TIME);
             fStatusSecond = convertTimeToSecond(&byBufferTimeStatus[0]);
         }
@@ -329,7 +329,7 @@ u32_t thoiGianTreTrungBinh(u8_p pbyStr, u32_t dwNumOfStr)
         {
             boCheck = false;
             fDelaySecond = fStatusSecond - fSetSecond;
-            fDelayTempSecond = (fDelayTempSecond * byCountTemp) / byCount +\
+            fDelayTempSecond = (fDelayTempSecond * byCountTemp) / byCount +
                 (fDelaySecond / byCount);
             byCountTemp = byCount;
             byCount++;

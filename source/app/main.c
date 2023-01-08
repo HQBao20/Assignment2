@@ -96,7 +96,7 @@ int main(void_t)
  * @func dwFileToString
  * @brief Convert file to string
  * 
- * @param [byStr] : 
+ * @param [byStr] : Buffer to parse
  * @return u32_t 
  */
 static u32_t dwFileToString(u8_p pbyStr)
@@ -120,6 +120,12 @@ static u32_t dwFileToString(u8_p pbyStr)
     return dwStatus;
 }
 
+/**
+ * @brief Print the netw and endpoint value of the switch
+ * 
+ * @param [pbyBuff] : Buffer to parse
+ * @return value : None
+ */
 static void_t printNetwEndpoint(u8_p pbyBuff)
 {
     u8_p byToken = strtok(pbyBuff, "-");
