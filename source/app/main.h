@@ -20,7 +20,7 @@
  *
  * Last Changed By:  $Author: baohq $
  * Revision:         $Revision: $
- * Last Changed:     $Date: $Jan 3, 2023
+ * Last Changed:     $Date: $Jan 4, 2023
  ******************************************************************************/
 // Enclosing macro to prevent multiple inclusion
 #ifndef MAIN_H_

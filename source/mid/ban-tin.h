@@ -80,7 +80,7 @@ u8_t soBanTinGuiTuThietBi(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffer[]);
  * @param [dwNumOfStr] : Number of element of the Buffer
  * @return u8_t 
  */
-u8_t soCongTac(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffToken1[], u8_t byBuffToken2[]);
+u8_t soCongTac(u8_p pbyStr, u32_t dwNumOfStr, u8_p pbyBuffToken1, u8_p pbyBuffToken2);
 
 /**
  * @func soBanTinGuiLoi

@@ -12,7 +12,7 @@
  * Lumi, JSC.
  * All Rights Reserved
  *
- * File name: function.c
+ * File name: ban-tin.c
  *
  * Description:
  *
@@ -20,7 +20,7 @@
  *
  * Last Changed By:  $Author: baohq $
  * Revision:         $Revision: $
- * Last Changed:     $Date: $Jan 3, 2023
+ * Last Changed:     $Date: $Jan 4, 2023
  *
  * Code sample:
  ******************************************************************************/
@@ -71,8 +71,6 @@
 /*                            PRIVATE FUNCTIONS                               */
 /******************************************************************************/
 static bool_t compareText(u8_p pbyStr, u8_p pbyBuff, u32_t point);
-static bool_t compareMultiText(u8_p pbyStr, u8_p pbyBuff1, u8_p pbyBuff2,
-    u32_t point);
 static void_t bufClr(u8_p buf);
 static bool_t compareBuffer(u8_p pbyBuff1, u8_p pbyBuff2, u8_t bySize);
 static void_t copyBuffer(u8_p pbyBuff1, u8_p pbyBuff2, u8_t bySize);
@@ -84,6 +82,13 @@ static float_t convertTimeToSecond(u8_p pbyBuffer);
 /******************************************************************************/
 
 /******************************************************************************/
+/**
+ * @func soBanTinGuiDi
+ * @brief Calculate the number of log sent
+ * 
+ * @param [pbyStr] : String to parse
+ * @return u8_t
+ */
 u8_t soBanTinGuiDi(u8_p pbyStr, u32_t dwNumOfStr)
 {
     u32_t i = 0;
@@ -103,6 +108,14 @@ u8_t soBanTinGuiDi(u8_p pbyStr, u32_t dwNumOfStr)
     return byCount;
 }
 
+/**
+ * @func soBanTinGuiTuThietBi
+ * @brief Print out the log that was sent
+ * 
+ * @param [pbyStr] : String to parse
+ * @param [dwNumOfStr] : Number of element of the Buffer
+ * @return value : None
+ */
 u8_t soBanTinGuiTuThietBi(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffer[])
 {
     u32_t i = 0;
@@ -128,6 +141,14 @@ u8_t soBanTinGuiTuThietBi(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffer[])
     return (byCount / 2);
 }
 
+/**
+ * @func soCongTac
+ * @brief Count switch
+ * 
+ * @param [pbyStr] : String to parse
+ * @param [dwNumOfStr] : Number of element of the Buffer
+ * @return u8_t 
+ */
 u8_t soCongTac(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffToken1[],
     u8_t byBuffToken2[])
 {
@@ -135,8 +156,8 @@ u8_t soCongTac(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffToken1[],
     u8_t j = 0;
     u8_t byCount = 0;
     u8_t byCountSwitch = 1;
-    u8_t byBufferNetwEndpoint1[LENGTH_NWT_ENDPOINT];
-    u8_t byBufferNetwEndpoint2[LENGTH_NWT_ENDPOINT];
+    u8_t byBufferNetwEndpoint1[LENGTH_NWT_ENDPOINT] = {0};
+    u8_t byBufferNetwEndpoint2[LENGTH_NWT_ENDPOINT] = {0};
     u8_t byBufferNetwEndpointTemp[LENGTH_NWT_ENDPOINT] = {0};
     u8_p pbyCompareStr = SET;
     bool_t boCheckEnd = false;
@@ -163,27 +184,35 @@ u8_t soCongTac(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffToken1[],
                     byBufferNetwEndpoint2[j] = *(pbyStr + i + j + START_POINT_NWT);
                 }
             }
-            if(compareBuffer(&byBufferNetwEndpoint1[0], &byBufferNetwEndpoint2[0],
-                LENGTH_NWT_ENDPOINT) == true || byCount == 0)
+            if(memcmp(byBufferNetwEndpoint1, byBufferNetwEndpoint2, LENGTH_NWT_ENDPOINT) == 0 ||
+                byCount == 0)
             {
                 bufClr(&byBufferNetwEndpoint2[0]);
             }
-            else if(compareBuffer(&byBufferNetwEndpointTemp[0], &byBufferNetwEndpoint2[0],
-                LENGTH_NWT_ENDPOINT) == false)
+            if(memcmp(byBufferNetwEndpointTemp, byBufferNetwEndpoint2, LENGTH_NWT_ENDPOINT) != 0)
             {
                 byCountSwitch++;
-                copyBuffer(&byBufferNetwEndpointTemp[0], &byBufferNetwEndpoint2[0],
-                    LENGTH_NWT_ENDPOINT);
+                memcpy(byBufferNetwEndpointTemp, byBufferNetwEndpoint2, LENGTH_NWT_ENDPOINT);
                 bufClr(&byBufferNetwEndpoint2[0]);
             }
         }
     }
-    copyBuffer(byBuffToken1, byBufferNetwEndpoint1, LENGTH_NWT_ENDPOINT);
-    copyBuffer(byBuffToken2, byBufferNetwEndpointTemp, LENGTH_NWT_ENDPOINT);
+    memcpy(byBuffToken1, byBufferNetwEndpoint1, LENGTH_NWT_ENDPOINT);
+    byBuffToken1[LENGTH_NWT_ENDPOINT] = '\0';
+    memcpy(byBuffToken2, byBufferNetwEndpointTemp, LENGTH_NWT_ENDPOINT);
+    byBuffToken2[LENGTH_NWT_ENDPOINT] = '\0';
 
     return byCountSwitch;
 }
 
+/**
+ * @func soBanTinGuiLoi
+ * @brief Calculate the number of log not sent
+ * 
+ * @param [pbyStr] : String to parse
+ * @param [dwNumOfStr] : Number of element of the Buffer
+ * @return u8_t
+ */
 u8_t soBanTinGuiLoi(u8_p pbyStr, u32_t dwNumOfStr)
 {
     u32_t i = 0;
@@ -193,15 +222,16 @@ u8_t soBanTinGuiLoi(u8_p pbyStr, u32_t dwNumOfStr)
     u8_p pbyCompareRequid = REQUID;
     u8_t pbyBufferSet[LENGTH_CODELOG] = {0};
     u8_t pbyBufferStatus[LENGTH_CODELOG] = {0};
-    bool_t boCheckSetStatus = false;
-    bool_t boCheckRequid = false;
+    bool_t boCheckSet = false;
     bool_t boCheckStatus = false;
+    bool_t boCheckRequid = false;
+    bool_t boCheck = false;
 
     for(i = START_POINT_SET; i < dwNumOfStr; i++)
     {
-        boCheckSetStatus = compareMultiText(pbyStr, pbyCompareSet,
-            pbyCompareStatus, i);
-        if(boCheckSetStatus)
+        boCheckSet = compareText(pbyStr, pbyCompareSet, i);
+        boCheckStatus = compareText(pbyStr, pbyCompareStatus, i);
+        if(boCheckSet)
         {
             boCheckRequid = compareText(pbyStr, pbyCompareRequid,
                 (i + LENGTH_SET_REQUID));
@@ -211,22 +241,22 @@ u8_t soBanTinGuiLoi(u8_p pbyStr, u32_t dwNumOfStr)
                     LENGTH_REQUID_CODELOG), LENGTH_CODELOG);
             }
         }
-        else
+        else if(boCheckStatus)
         {
             boCheckRequid = compareText(pbyStr, pbyCompareRequid,
                 (i + LENGTH_STATUS_REQUID));
             if(boCheckRequid)
             {
-                boCheckStatus = true;
+                boCheck = true;
                 copyString(&pbyBufferStatus[0], pbyStr, (i + LENGTH_STATUS_REQUID +
                     LENGTH_REQUID_CODELOG), LENGTH_CODELOG);
             }
         }
 
-        if(boCheckStatus)
+        if(boCheck)
         {
-            boCheckStatus = false;
-            if(compareBuffer(pbyBufferSet, pbyBufferStatus, LENGTH_CODELOG) == false)
+            boCheck = false;
+            if(strcmp(pbyBufferSet, pbyBufferStatus) != 0)
             {
                 byCount++;
                 bufClr(pbyBufferSet);
@@ -238,6 +268,14 @@ u8_t soBanTinGuiLoi(u8_p pbyStr, u32_t dwNumOfStr)
     return byCount;
 }
 
+/**
+ * @func thoiGianTreLonNhat
+ * @brief Calculate the max delay time
+ * 
+ * @param [pbyStr] : String to parse
+ * @param [dwNumOfStr] : Number of element of the Buffer
+ * @return float_t
+ */
 u32_t thoiGianTreLonNhat(u8_p pbyStr, u32_t dwNumOfStr)
 {
     u32_t i = 0;
@@ -288,6 +326,14 @@ u32_t thoiGianTreLonNhat(u8_p pbyStr, u32_t dwNumOfStr)
     return dwDelayMaxSecond;
 }
 
+/**
+ * @func thoiGianTreTrungBinh
+ * @brief Calculate the average time
+ * 
+ * @param [pbyStr] : String to parse
+ * @param [dwNumOfStr] : Number of element of the Buffer
+ * @return u32_t 
+ */
 u32_t thoiGianTreTrungBinh(u8_p pbyStr, u32_t dwNumOfStr)
 {
     u32_t i = 0;
@@ -359,55 +405,13 @@ static void_t bufClr(u8_p pbyBuf)
 }
 
 /**
- * @func compareBuffer
- * @brief Compare two arrays
- * 
- * @param byBuff1 
- * @param byBuff2 
- * @return bool_t 
- */
-static bool_t compareBuffer(u8_p pbyBuff1, u8_p pbyBuff2, u8_t bySize)
-{
-    bool_t boCompare = true;
-    u8_t i = 0;
-
-    for(i = 0; i < bySize; i++)
-    {
-        if(*(pbyBuff1 + i) != *(pbyBuff2 + i))
-        {
-            boCompare = false;
-            break;
-        }
-    }
-
-    return boCompare;
-}
-
-/**
- * @brief Copy two arrays
- * 
- * @param byBuff1 
- * @param byBuff2 
- * @return void_t 
- */
-static void_t copyBuffer(u8_p pbyBuff1, u8_p pbyBuff2, u8_t bySize)
-{
-    u8_t i = 0;
-
-    for(i = 0; i < bySize; i++)
-    {
-       *(pbyBuff1 + i) = *(pbyBuff2 + i);
-    }
-}
-
-/**
  * @func compareText
  * @brief Compare string
  * 
- * @param pbyStr 
- * @param pbyBuff 
- * @param point 
- * @return bool_t 
+ * @param [pbyStr] : Buffer needs to be copied
+ * @param [pbyBuff] : Buffer to be copied
+ * @param [point] : Location to copy
+ * @return bool_t
  */
 static bool_t compareText(u8_p pbyStr, u8_p pbyBuff, u32_t point)
 {
@@ -431,55 +435,13 @@ static bool_t compareText(u8_p pbyStr, u8_p pbyBuff, u32_t point)
 }
 
 /**
- * @brief Compare two strings
- * 
- * @param pbyStr 
- * @param pbyBuff1 
- * @param pbyBuff2 
- * @param point 
- * @return bool_t 
- */
-static bool_t compareMultiText(u8_p pbyStr, u8_p pbyBuff1, u8_p pbyBuff2,
-    u32_t point)
-{
-    u8_t i = 0;
-    bool_t boCheckString = false;
-
-    for(i = 0; i < strlen(pbyBuff1); i++)
-    {
-        if(*(pbyStr + point + i) != *(pbyBuff1 + i))
-        {
-            boCheckString = false;
-            break;
-        }
-        else
-        {
-            boCheckString = true;
-        }
-    }
-    for(i = 0; i < strlen(pbyBuff2); i++)
-    {
-        if(*(pbyStr + point + i) != *(pbyBuff2 + i))
-        {
-            boCheckString = true;
-            break;
-        }
-        else
-        {
-            boCheckString = false;
-        }
-    }
-
-    return boCheckString;
-}
-
-/**
+ * @func copyString
  * @brief Copy Buff2 into Buff1
  * 
- * @param byBuff1 
- * @param byBuff2 
- * @param point 
- * @param bySize 
+ * @param [byBuff1] : Buffer is copied data
+ * @param [byBuff2] : Buffer needs to copy data
+ * @param [point] : The position of byBuffer is copied
+ * @param [bySize] : Buffer size copied
  * @return void_t 
  */
 static void_t copyString(u8_p byBuff1, u8_p byBuff2, u32_t point, u8_t bySize)
@@ -493,9 +455,10 @@ static void_t copyString(u8_p byBuff1, u8_p byBuff2, u32_t point, u8_t bySize)
 }
 
 /**
+ * @func convertTimeToSecond
  * @brief Convert time to seconds
  * 
- * @param pbyBuffer 
+ * @param [pbyBuffer] : Buffer to parse
  * @return float_t 
  */
 static float_t convertTimeToSecond(u8_p pbyBuffer)
