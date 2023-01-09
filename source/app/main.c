@@ -31,6 +31,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../mid/ban-tin.h"
 #include "main.h"
 
 /******************************************************************************/
