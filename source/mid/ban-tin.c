@@ -37,27 +37,27 @@
 /******************************************************************************/
 /*                     EXPORTED TYPES and DEFINITIONS                         */
 /******************************************************************************/
-#define TYPE_DEVICE "switch"
-#define SET "set"
-#define STATUS "status"
-#define CMD "cmd"
-#define RAW "raw"
-#define REQUID "reqid"
-#define LENGTH_NWT_ENDPOINT 8
-#define START_POINT_SET 38
-#define START_POINT_NWT 48
-#define START_POINT_RAW 153
-#define LENGTH_NWT_RAW 6
-#define LENGTH_SET_REQUID 138
-#define LENGTH_STATUS_REQUID 152
-#define LENGTH_REQUID_CODELOG 9
-#define LENGTH_CODELOG 4
-#define LENGTH_TIME_SET 21
-#define LENGTH_TIME 12
-#define FIRST 0
-#define SECOND 1
-#define THIRD 2
-#define NUM_OF_DELAY_TIME 20
+#define TYPE_DEVICE              "switch"
+#define SET                      "set"
+#define STATUS                   "status"
+#define CMD                      "cmd"
+#define RAW                      "raw"
+#define REQUID                   "reqid"
+#define LENGTH_NWT_ENDPOINT      8
+#define START_POINT_SET          38
+#define START_POINT_NWT          48
+#define START_POINT_RAW          153
+#define LENGTH_NWT_RAW           6
+#define LENGTH_SET_REQUID        138
+#define LENGTH_STATUS_REQUID     152
+#define LENGTH_REQUID_CODELOG    9
+#define LENGTH_CODELOG           4
+#define LENGTH_TIME_SET          21
+#define LENGTH_TIME              12
+#define SECOND                   0
+#define MINUTE                   1
+#define HOUR                     2
+#define NUM_OF_DELAY_TIME        20
 
 /******************************************************************************/
 /*                              PRIVATE DATA                                  */
@@ -70,10 +70,8 @@
 /******************************************************************************/
 /*                            PRIVATE FUNCTIONS                               */
 /******************************************************************************/
-static bool_t compareText(u8_p pbyStr, u8_p pbyBuff, u32_t point);
 static void_t bufClr(u8_p buf);
-static bool_t compareBuffer(u8_p pbyBuff1, u8_p pbyBuff2, u8_t bySize);
-static void_t copyBuffer(u8_p pbyBuff1, u8_p pbyBuff2, u8_t bySize);
+static bool_t compareText(u8_p pbyStr, u8_p pbyBuff, u32_t point);
 static void_t copyString(u8_p byBuff1, u8_p byBuff2, u32_t point, u8_t bySize);
 static float_t convertTimeToSecond(u8_p pbyBuffer);
 
@@ -283,7 +281,6 @@ u32_t thoiGianTreLonNhat(u8_p pbyStr, u32_t dwNumOfStr)
     u8_p pbyCompareStatus = STATUS;
     u8_t byBufferTimeSet[LENGTH_TIME] = {0};
     u8_t byBufferTimeStatus[LENGTH_TIME] = {0};
-    float_t byBufferSecond[NUM_OF_DELAY_TIME] = {0};
     float_t fSetSecond = 0;
     float_t fStatusSecond = 0;
     float_t fDelaySecond = 0;
@@ -332,7 +329,7 @@ u32_t thoiGianTreLonNhat(u8_p pbyStr, u32_t dwNumOfStr)
  * 
  * @param [pbyStr] : String to parse
  * @param [dwNumOfStr] : Number of element of the Buffer
- * @return u32_t 
+ * @return u32_t
  */
 u32_t thoiGianTreTrungBinh(u8_p pbyStr, u32_t dwNumOfStr)
 {
@@ -343,7 +340,6 @@ u32_t thoiGianTreTrungBinh(u8_p pbyStr, u32_t dwNumOfStr)
     u8_p pbyCompareStatus = STATUS;
     u8_t byBufferTimeSet[LENGTH_TIME] = {0};
     u8_t byBufferTimeStatus[LENGTH_TIME] = {0};
-    float_t fBufferSecond[NUM_OF_DELAY_TIME] = {0};
     float_t fSetSecond = 0;
     float_t fStatusSecond = 0;
     float_t fDelaySecond = 0;
@@ -408,9 +404,9 @@ static void_t bufClr(u8_p pbyBuf)
  * @func compareText
  * @brief Compare string
  * 
- * @param [pbyStr] : Buffer needs to be copied
- * @param [pbyBuff] : Buffer to be copied
- * @param [point] : Location to copy
+ * @param [pbyStr] : Buffer needs to be compared
+ * @param [pbyBuff] : Buffer to be compared
+ * @param [point] : The position of byBuffer is compared
  * @return bool_t
  */
 static bool_t compareText(u8_p pbyStr, u8_p pbyBuff, u32_t point)
@@ -442,7 +438,7 @@ static bool_t compareText(u8_p pbyStr, u8_p pbyBuff, u32_t point)
  * @param [byBuff2] : Buffer needs to copy data
  * @param [point] : The position of byBuffer is copied
  * @param [bySize] : Buffer size copied
- * @return void_t 
+ * @return value : None
  */
 static void_t copyString(u8_p byBuff1, u8_p byBuff2, u32_t point, u8_t bySize)
 {
@@ -473,15 +469,15 @@ static float_t convertTimeToSecond(u8_p pbyBuffer)
     {
         switch(byCount)
         {
-            case FIRST:
+            case SECOND:
             {
                 byHour = atof(byToken);
             }break;
-            case SECOND:
+            case MINUTE:
             {
                 byMinute = atof(byToken);
             }break;
-            case THIRD:
+            case HOUR:
             {
                 bySecond = atof(byToken);
             }break;

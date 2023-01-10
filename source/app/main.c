@@ -43,7 +43,7 @@
 /******************************************************************************/
 /*                              PRIVATE DATA                                  */
 /******************************************************************************/
-static u8_t byFileStr[MAXLENGTHFILE];
+static u8_t g_byFileStr[MAXLENGTHFILE];
 
 /******************************************************************************/
 /*                              EXPORTED DATA                                 */
@@ -72,22 +72,22 @@ int main(void_t)
     u8_t byBuffTok1[8];
     u8_t byBuffTok2[8];
 
-    dwFileToString(byFileStr);
-    byNumBanTinGuiDi = soBanTinGuiDi(byFileStr, strlen(byFileStr));
+    dwFileToString(g_byFileStr);
+    byNumBanTinGuiDi = soBanTinGuiDi(g_byFileStr, strlen(g_byFileStr));
     printf("\nSo ban tin duoc gui di la: %d", byNumBanTinGuiDi);
     printf("\nNhap networking: ");
     gets(byBuffer);
-    byNumBanTinGuiDiThietBi = soBanTinGuiTuThietBi(byFileStr, strlen(byFileStr), byBuffer);
+    byNumBanTinGuiDiThietBi = soBanTinGuiTuThietBi(g_byFileStr, strlen(g_byFileStr), byBuffer);
     printf("\nSo ban tin duoc gui di tu thiet bi: %d", byNumBanTinGuiDiThietBi);
-    byNumSwitch = soCongTac(byFileStr, strlen(byFileStr), &byBuffTok1[0], &byBuffTok2[0]);
+    byNumSwitch = soCongTac(g_byFileStr, strlen(g_byFileStr), &byBuffTok1[0], &byBuffTok2[0]);
     printf("\nSo cong tac la: %d", byNumSwitch);
     printNetwEndpoint(&byBuffTok1[0]);
     printNetwEndpoint(&byBuffTok2[0]);
-    byNumBanTinGuiLoi = soBanTinGuiLoi(byFileStr,strlen(byFileStr));
+    byNumBanTinGuiLoi = soBanTinGuiLoi(g_byFileStr,strlen(g_byFileStr));
     printf("\nSo ban tin gui loi la: %d", byNumBanTinGuiLoi);
-    dwNumThoiGianTreLonNhat = thoiGianTreLonNhat(byFileStr, strlen(byFileStr));
+    dwNumThoiGianTreLonNhat = thoiGianTreLonNhat(g_byFileStr, strlen(g_byFileStr));
     printf("\nDo tre lon nhat la: %d", dwNumThoiGianTreLonNhat);
-    dwNumThoiGianTreTrungBinh = thoiGianTreTrungBinh(byFileStr, strlen(byFileStr));
+    dwNumThoiGianTreTrungBinh = thoiGianTreTrungBinh(g_byFileStr, strlen(g_byFileStr));
     printf("\nDo tre trung binh la: %d", dwNumThoiGianTreTrungBinh);
 
     return 0;
