@@ -37,7 +37,6 @@
 /******************************************************************************/
 /*                     EXPORTED TYPES and DEFINITIONS                         */
 /******************************************************************************/
-#define TYPE_DEVICE              "switch"
 #define SET                      "set"
 #define STATUS                   "status"
 #define CMD                      "cmd"
