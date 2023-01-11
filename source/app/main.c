@@ -37,8 +37,10 @@
 /******************************************************************************/
 /*                     EXPORTED TYPES and DEFINITIONS                         */
 /******************************************************************************/
-#define FILENAME "log.txt"
-#define MAXLENGTHFILE 5000
+#define FILENAME                "log.txt"
+#define MAXLENGTHFILE           5000
+#define LENGTH_OF_BUFFER        4
+#define LENGTH_OF_BUFFER_TOK    8
 
 /******************************************************************************/
 /*                              PRIVATE DATA                                  */
@@ -68,9 +70,9 @@ int main(void_t)
     u8_t byNumBanTinGuiLoi = 0;
     u32_t dwNumThoiGianTreLonNhat = 0;
     u32_t dwNumThoiGianTreTrungBinh = 0;
-    u8_t byBuffer[4];
-    u8_t byBuffTok1[8];
-    u8_t byBuffTok2[8];
+    u8_t byBuffer[LENGTH_OF_BUFFER];
+    u8_t byBuffTok1[LENGTH_OF_BUFFER_TOK];
+    u8_t byBuffTok2[LENGTH_OF_BUFFER_TOK];
 
     dwFileToString(g_byFileStr);
     byNumBanTinGuiDi = soBanTinGuiDi(g_byFileStr, strlen(g_byFileStr));

@@ -57,6 +57,9 @@
 #define MINUTE                   1
 #define HOUR                     2
 #define NUM_OF_DELAY_TIME        20
+#define SECOND_TO_MILISECOND     1000
+#define HOUR_TO_SECOND           3600
+#define MINUTE_TO_SECOND         60
 
 /******************************************************************************/
 /*                              PRIVATE DATA                                  */
@@ -69,7 +72,7 @@
 /******************************************************************************/
 /*                            PRIVATE FUNCTIONS                               */
 /******************************************************************************/
-static void_t bufClr(u8_p buf);
+static void_t bufClear(u8_p buf);
 static bool_t compareText(u8_p pbyStr, u8_p pbyBuff, u32_t point);
 static void_t copyString(u8_p byBuff1, u8_p byBuff2, u32_t point, u8_t bySize);
 static float_t convertTimeToSecond(u8_p pbyBuffer);
@@ -184,13 +187,13 @@ u8_t soCongTac(u8_p pbyStr, u32_t dwNumOfStr, u8_t byBuffToken1[],
             if(memcmp(byBufferNetwEndpoint1, byBufferNetwEndpoint2, LENGTH_NWT_ENDPOINT) == 0 ||
                 byCount == 0)
             {
-                bufClr(&byBufferNetwEndpoint2[0]);
+                bufClear(&byBufferNetwEndpoint2[0]);
             }
             if(memcmp(byBufferNetwEndpointTemp, byBufferNetwEndpoint2, LENGTH_NWT_ENDPOINT) != 0)
             {
                 byCountSwitch++;
                 memcpy(byBufferNetwEndpointTemp, byBufferNetwEndpoint2, LENGTH_NWT_ENDPOINT);
-                bufClr(&byBufferNetwEndpoint2[0]);
+                bufClear(&byBufferNetwEndpoint2[0]);
             }
         }
     }
@@ -256,8 +259,8 @@ u8_t soBanTinGuiLoi(u8_p pbyStr, u32_t dwNumOfStr)
             if(strcmp(pbyBufferSet, pbyBufferStatus) != 0)
             {
                 byCount++;
-                bufClr(pbyBufferSet);
-                bufClr(pbyBufferStatus);
+                bufClear(pbyBufferSet);
+                bufClear(pbyBufferStatus);
             }
         }
     }
@@ -317,7 +320,8 @@ u32_t thoiGianTreLonNhat(u8_p pbyStr, u32_t dwNumOfStr)
             }
         }
     }
-    dwDelayMaxSecond = fDelayTempSecond * 1000;
+    dwDelayMaxSecond = fDelayTempSecond * SECOND_TO_MILISECOND;
+;
 
     return dwDelayMaxSecond;
 }
@@ -376,26 +380,26 @@ u32_t thoiGianTreTrungBinh(u8_p pbyStr, u32_t dwNumOfStr)
             byCount++;
         }
     }
-    dwDelayAverageSecond = fDelayTempSecond * 1000;
+    dwDelayAverageSecond = fDelayTempSecond * SECOND_TO_MILISECOND;
 
     return dwDelayAverageSecond;
 }
 
 /**
- * @func bufClr
+ * @func bufClear
  * @brief Clear buffer
  * 
- * @param [byBuf] : Buffer needs to be cleared 
- * @return value : None 
+ * @param [byBuf] : Buffer needs to be cleared
+ * @return value : None
  */
-static void_t bufClr(u8_p pbyBuf)
+static void_t bufClear(u8_p pbyBuffer)
 {
-    u8_t byLength = strlen(pbyBuf);
+    u8_t byLength = strlen(pbyBuffer);
     u8_t i = 0;
 
     for (i = 0; i < byLength; i++)
     {
-        *(pbyBuf + i) = 0;
+        *(pbyBuffer + i) = 0;
     }
 }
 
@@ -486,7 +490,7 @@ static float_t convertTimeToSecond(u8_p pbyBuffer)
         byToken = strtok(NULL, ":");
         byCount++;
     }
-    bySecond = bySecond + byMinute * 60 + byHour * 3600;
+    bySecond = bySecond + byMinute * MINUTE_TO_SECOND + byHour * HOUR_TO_SECOND;
 
     return bySecond;
 }
